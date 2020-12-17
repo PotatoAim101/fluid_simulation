@@ -16,6 +16,14 @@ Matrix::Matrix(int c, int r, int s) {
 }
 
 /*gets and sets*/
+int Matrix::getRow() const {
+	return row;
+}
+
+int Matrix::getCol() const {
+	return col;
+}
+
 float Matrix::getValue(int i, int j) const {
 	if(i>0 && i <row && j>0 && j<row)
 		return values[i+(j-1)*col];
@@ -24,21 +32,13 @@ float Matrix::getValue(int i, int j) const {
 
 void Matrix::setValue(int i, int j, float v) {
 	if(i>0 && i <row && j>0 && j<row)
-		values[i+infBound(j-1,0)*col] = v;
+		values[i+inferior(j-1,0)*col] = v;
 }
 
 void Matrix::resize(int c, int r) {
 	col=c;
 	row=r;
 	values.resize(col*row,0);
-}
-
-int Matrix::getRow() const {
-	return row;
-}
-
-int Matrix::getCol() const {
-	return col;
 }
 
 void Matrix::setScale(int s) {
@@ -49,9 +49,8 @@ int Matrix::getScale() const {
 	return scale;
 }
 
-
-Matrix operator+(Matrix const& m1, Matrix const& m2)
-{
+/* operations */
+Matrix operator+(Matrix const& m1, Matrix const& m2) {
 	Matrix result(m1);
 	for(int i(0); i < m1.getCol(); i++) 
 	{
@@ -62,20 +61,8 @@ Matrix operator+(Matrix const& m1, Matrix const& m2)
 	}
 	return result;
 }
-Matrix operator-(Matrix const& m1, Matrix const& m2)
-{
-	Matrix result(m1);
-	for(int i(0); i < m1.getCol(); i++) 
-	{
-		for(int j(0); j < m1.getCol(); j++) 
-		{
-			result.setValue(i,j, m1.getValue(i,j)-m2.getValue(i,j));
-		}
-	}
-	return result;
-}
-Matrix operator*(Matrix const& m, float k)
-{
+
+Matrix operator*(Matrix const& m, float k) {
 	Matrix result(m);
 	for(int i(0); i < m.getCol(); i++) 
 	{
@@ -86,8 +73,20 @@ Matrix operator*(Matrix const& m, float k)
 	}
 	return result;
 }
-Matrix operator/(Matrix const& m, float k)
-{
+
+Matrix operator-(Matrix const& m1, Matrix const& m2) {
+	Matrix result(m1);
+	for(int i(0); i < m1.getCol(); i++) 
+	{
+		for(int j(0); j < m1.getCol(); j++) 
+		{
+			result.setValue(i,j, m1.getValue(i,j)-m2.getValue(i,j));
+		}
+	}
+	return result;
+}
+
+Matrix operator/(Matrix const& m, float k) {
 	Matrix result(m);
 	for(int i(0); i < m.getCol(); i++) 
 	{

@@ -2,72 +2,69 @@
 
 #include "utils.h"
 
-using namespace std ;
-using namespace sf ;
+using namespace std;
+using namespace sf;
 
 class Fluid
 {
 public:
-	Fluid() ;
-	Fluid(float const& _width, float const& _height, float const& _rho, float const& _k, float const& _buoyancyFactor, float const& _L, float const& _scale) ;
+	Fluid();
+	Fluid(float const&, float const&, float const&, float const&, float const&, float const&, float const&);
 
-	void Update(float const& dt) ;
-
-	Sprite getPressureSprite() ; 
-	Sprite getTemperatureSprite() ;
-	Sprite getSpeedSprite() ;
-	Sprite getDensitySprite() ;
-	Sprite getWallSprite() ;
-	Sprite get3DSprite() ;
+	void update(float const&);
 	
-	void Reset() ;
+	void reset();
 
-	void drawSpeedField(RenderWindow &window, float const& size, Color const& color) const ;
+	Sprite get_speed_sprite();
+	Sprite get_density_sprite();
+	Sprite get_pressure_sprite();
+	Sprite get_wall_sprite();
+	Sprite get3DSprite();
 
-	int getWidth() const ;
-	int getHeight() const ;
-	float getScale() const ;
-	Matrix getP() const ;
+	void add_density(Vector2f, float, float);
+	void set_wall(Vector2f const&, float const&, int const&);
+	void add_pressure(Vector2f const&, float const&, float const&);
+	void add_speed(Vector2f, Vector2f, Vector2f);
+	void draw_speed_field(RenderWindow &, float const&, Color const&) const;
 
-	void setWallZone(Vector2f const& pos, float const& size, int const& on) ;
-	void addPressureZone(Vector2f const& pos, float const& size, float const& _p) ;
-	void addTemperatureZone(Vector2f const& pos, float const& size, float const& _T) ;
-	void addSpeedZone(Vector2f pos, Vector2f size, Vector2f speed) ;
-	void addDensityZone(Vector2f pos, float size, float _density) ;
+	Sprite get_temperature_sprite();
+	void add_temperature(Vector2f const&, float const&, float const&);
 	
 private:
-	int width ;
-	int height ;
-	float rho ; 
-	float k ;
-	float buoyancyFactor ;
-	float L ;
-	float ambientTemperature ;
-	Matrix u ;
-	Matrix v ;
-	Matrix u0 ;
-	Matrix v0 ;
-	Matrix p ;
-	Matrix wall ;
-	Matrix T ;
-	Matrix T0 ;
-	Matrix density ;
-	Matrix density0 ;
+	int width;
+	int height;
+	float scale;
 
-	Image image ; 
-	Texture texture ;
-	Sprite sprite ;
+	float rho; 
+	float k;
+	float buoyancy_fctr;
+	float L;
+	float ambient_tpr;
 
-	Image posPressureColor ; 
-	Image negPressureColor ; 
-	Image temperatureColor ; 
-	Image speedColor ;
-	Image densityColor ;
+	Matrix u;
+	Matrix u_pred;
+	Matrix v;
+	Matrix v_pred;
+	Matrix p;
+	Matrix walls;
+	Matrix density;
+	Matrix density_pred;
 
-	float pScale ;
-	float vScale ;
-	float tScale ;
-	
-	float scale ;
+	Matrix temperature;
+	Matrix temperature_pred;
+
+	Image image; 
+	Texture texture;
+	Sprite sprite;
+
+	Image posPressureColor; 
+	Image negPressureColor; 
+	Image temperatureColor; 
+	Image speedColor;
+	Image densityColor;
+
+	float pressure_scale;
+	float viscosity_scale;
+	float temperature_scale;
 };
 
