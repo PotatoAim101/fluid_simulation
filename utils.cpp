@@ -3,6 +3,7 @@
 using namespace sf;
 using namespace std;
 
+/* we use this function to draw the speed vectors */
 void draw_line(Vector2f const& pos, Vector2f const& dir, RenderWindow &window, Color const& color) {
 	VertexArray lines(Lines, 2);
 	lines[0].position = pos;

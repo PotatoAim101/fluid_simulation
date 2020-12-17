@@ -9,9 +9,9 @@ class Fluid
 {
 public:
 	Fluid();
-	Fluid(float const&, float const&, float const&, float const&, float const&, float const&, float const&);
+	Fluid(float, float, float, float, float, float, float);
 
-	void update(float const&);
+	void update(float);
 	
 	void reset();
 
@@ -21,14 +21,14 @@ public:
 	Sprite get_wall_sprite();
 	Sprite get3DSprite();
 
-	void add_density(Vector2f, float, float);
-	void set_wall(Vector2f const&, float const&, int const&);
+	void add_density(Vector2f, float const&, float const&);
+	void set_wall(Vector2f const&, float const&, int);
 	void add_pressure(Vector2f const&, float const&, float const&);
 	void add_speed(Vector2f, Vector2f, Vector2f);
 	void draw_speed_field(RenderWindow &, float const&, Color const&) const;
 
 	Sprite get_temperature_sprite();
-	void add_temperature(Vector2f const&, float const&, float const&);
+	void add_temperature(Vector2f, float const&, float const&);
 	
 private:
 	int width;
@@ -45,7 +45,7 @@ private:
 	Matrix u_pred;
 	Matrix v;
 	Matrix v_pred;
-	Matrix p;
+	Matrix pressure;
 	Matrix walls;
 	Matrix density;
 	Matrix density_pred;

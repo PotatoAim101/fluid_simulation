@@ -5,19 +5,19 @@ Fluid::Fluid() {
 	/* initializing the numerical values */
 	width = 300;
 	height = 300;
+	scale = 1;
+	buoyancy_fctr = 0.001;
+	ambient_tpr = 0;
 	rho = 10; 
 	k = rho*25;
 	L=1;
-	buoyancy_fctr = 0.001;
-	ambient_tpr = 0;
-	scale = 1;
 	
 	/* picking the right size for the different matrices representing the fluid properties */
 	u.resize(width, height);
 	v.resize(width, height);
 	u_pred.resize(width, height);
 	v_pred.resize(width, height);
-	p.resize(width, height);
+	pressure.resize(width, height);
 	walls.resize(width, height);
 	density.resize(width, height); 
 	density_pred.resize(width, height);
@@ -31,7 +31,7 @@ Fluid::Fluid() {
 	v.setScale(scale);
 	u_pred.setScale(scale);
 	v_pred.setScale(scale);
-	p.setScale(scale);
+	pressure.setScale(scale);
 	walls.setScale(scale);
 	density.setScale(scale);
 	density_pred.setScale(scale);
@@ -50,7 +50,7 @@ Fluid::Fluid() {
 			v.setValue(i,j,0);
 			u_pred.setValue(i,j,0);
 			v_pred.setValue(i,j,0);
-			p.setValue(i,j,0);
+			pressure.setValue(i,j,0);
 			walls.setValue(i,j,0);
 			density.setValue(i,j,0);
 			density_pred.setValue(i,j,0);
@@ -76,23 +76,23 @@ Fluid::Fluid() {
 }
 
 /* constructor */
-Fluid::Fluid(float const& _width, float const& _height, float const& _rho, float const& _k, float const& _buoyancy_fctr, float const& _L, float const& _scale) {
+Fluid::Fluid(float _width, float _height, float _rho, float _k, float _buoyancy_fctr, float _L, float _scale) {
 	/* initializing the numerical values */
 	width = _width;
 	height = _height;
+	scale = _scale;
+	buoyancy_fctr = _buoyancy_fctr;
+	ambient_tpr = 0;
 	rho = _rho; 
 	k = _k;
 	L = 2*_L/(width+height);
-	buoyancy_fctr = _buoyancy_fctr;
-	ambient_tpr = 0;
-	scale = _scale;
 
 	/* picking the right size for the different matrices representing the fluid properties */
 	u.resize(width, height);
 	v.resize(width, height);
 	u_pred.resize(width, height); 
 	v_pred.resize(width, height);
-	p.resize(width, height); 
+	pressure.resize(width, height); 
 	walls.resize(width, height);
 	density.resize(width, height);
 	density_pred.resize(width, height);
@@ -106,7 +106,7 @@ Fluid::Fluid(float const& _width, float const& _height, float const& _rho, float
 	v.setScale(scale);
 	u_pred.setScale(scale);
 	v_pred.setScale(scale);
-	p.setScale(scale);
+	pressure.setScale(scale);
 	walls.setScale(scale);
 	density.setScale(scale);
 	density_pred.setScale(scale);
@@ -124,7 +124,7 @@ Fluid::Fluid(float const& _width, float const& _height, float const& _rho, float
 			v.setValue(i,j,0);
 			u_pred.setValue(i,j,0);
 			v_pred.setValue(i,j,0);
-			p.setValue(i,j,0);
+			pressure.setValue(i,j,0);
 			walls.setValue(i,j,0); if(i<5) walls.setValue(i,j,2); if(i>width-5) walls.setValue(i,j,3); if(j<5) walls.setValue(i,j,4); if(j>height-5) walls.setValue(i,j,5);
 			density.setValue(i,j,0);
 			density_pred.setValue(i,j,0);
@@ -155,13 +155,13 @@ Fluid::Fluid(float const& _width, float const& _height, float const& _rho, float
 }
 
 /* Updater function for the simulation */
-void Fluid::update(float const& dt) {
+void Fluid::update(float dt) {
 	for(int i(2); i < width-2; i++) {
 		for(int j(2); j < height-2; j++) {
 			/* most important lines */
 			/* They represent how we deal with navier stokes equation and compute fluid properties */
-			u.setValue(i,j, u.getValue(i,j) - ( (1/rho)*(p.getValue(i+1,j)-p.getValue(i-1,j))/(2.f*L))*dt);
-			v.setValue(i,j, v.getValue(i,j) - ( (1/rho)*(p.getValue(i,j+1)-p.getValue(i,j-1))/(2.f*L))*dt);
+			u.setValue(i,j, u.getValue(i,j) - ( (1/rho)*(pressure.getValue(i+1,j)-pressure.getValue(i-1,j))/(2.f*L))*dt);
+			v.setValue(i,j, v.getValue(i,j) - ( (1/rho)*(pressure.getValue(i,j+1)-pressure.getValue(i,j-1))/(2.f*L))*dt);
 			
 			v.setValue(i,j, v.getValue(i,j) - buoyancy_fctr*(temperature.getValue(i,j)-ambient_tpr)*dt);
 
@@ -220,7 +220,7 @@ void Fluid::update(float const& dt) {
 	{
 		for(int j(1); j < height-1; j++)
 		{
-			p.setValue(i,j, p.getValue(i,j) - k*( (u.getValue(i+1,j)-u.getValue(i-1,j))/(2.f*L)  + (v.getValue(i,j+1)-v.getValue(i,j-1))/(2.f*L) )*dt );
+			pressure.setValue(i,j, pressure.getValue(i,j) - k*( (u.getValue(i+1,j)-u.getValue(i-1,j))/(2.f*L)  + (v.getValue(i,j+1)-v.getValue(i,j-1))/(2.f*L) )*dt );
 
 			if(walls.getValue(i,j)!=1)
 			{
@@ -255,7 +255,7 @@ void Fluid::reset() {
 			v.setValue(i,j,0);
 			u_pred.setValue(i,j,0);
 			v_pred.setValue(i,j,0);
-			p.setValue(i,j,0);
+			pressure.setValue(i,j,0);
 			density.setValue(i, j, 0);
 			density_pred.setValue(i, j, 0);
 			if(walls.getValue(i,j)==1) walls.setValue(i,j,0);
@@ -270,8 +270,8 @@ blue for negative pressure */
 Sprite Fluid::get_pressure_sprite() {
 	for(int i(1); i < width-1; i++)
 		for(int j(1); j < height-1; j++)
-			if(p.getValue(i,j) > 0 ) image.setPixel(i,j,color_gradient(posPressureColor, p.getValue(i,j)/pressure_scale));
-			else image.setPixel(i,j,color_gradient(negPressureColor, -p.getValue(i,j)/pressure_scale));
+			if(pressure.getValue(i,j) > 0 ) image.setPixel(i,j,color_gradient(posPressureColor, pressure.getValue(i,j)/pressure_scale));
+			else image.setPixel(i,j,color_gradient(negPressureColor, -pressure.getValue(i,j)/pressure_scale));
 	
 	texture.loadFromImage(image);
 	return sprite;
@@ -311,7 +311,7 @@ Sprite Fluid::get_wall_sprite() {
 	return sprite;
 }
 
-/* Allows to draw pressure feilds */
+/* Allows to draw pressure feilds in a 3D way to show the "waves"*/
 Sprite Fluid::get3DSprite() {
 	for(int i(1); i < width-1; i++)
 		for(int j(1); j < height-1; j++)
@@ -322,27 +322,27 @@ Sprite Fluid::get3DSprite() {
 }
 
 /* Allows to add a density to a simulation */
-void Fluid::add_density(Vector2f pos, float size, float _density) {
+void Fluid::add_density(Vector2f pos, float const& size, float const& d) {
 	for(int i((pos.x-size)/scale); i < (pos.x+size)/scale; i++)
 		for(int j((pos.y-size)/scale); j < (pos.y+size)/scale; j++)
 			if(distance(Vector2f(i,j),pos/scale)<size/scale)
-				density.setValue(i,j,_density);
+				density.setValue(i,j,d);
 }
 
 /* Allows to add walls to a simulation */
-void Fluid::set_wall(Vector2f const& pos, float const& size, int const& on) {
+void Fluid::set_wall(Vector2f const& pos, float const& size, int w) {
 	for(int i((pos.x-size)/scale); i < (pos.x+size)/scale; i++)
 		for(int j((pos.y-size)/scale); j < (pos.y+size)/scale; j++)
 			if(distance(Vector2f(i,j),pos/scale)<size/scale)
-				walls.setValue(i,j,on);
+				walls.setValue(i,j,w);
 }
 
 /* Allows to add pressure to a simulation */
-void Fluid::add_pressure(Vector2f const& pos, float const& size, float const& _p) {
+void Fluid::add_pressure(Vector2f const& pos, float const& size, float const& p) {
 	for(int i((pos.x-size)/scale); i < (pos.x+size)/scale; i++)
 		for(int j((pos.y-size)/scale); j < (pos.y+size)/scale; j++)
 			if(distance(Vector2f(i,j),pos/scale)<size/scale)
-				p.setValue(i,j,_p);
+				pressure.setValue(i,j, p);
 }
 
 /* Allows to add speed to a simulation */
@@ -380,9 +380,9 @@ Sprite Fluid::get_temperature_sprite() {
 }
 
 /* Allows to add a temperature to a simulation */
-void Fluid::add_temperature(Vector2f const& pos, float const& size, float const& _T) {
+void Fluid::add_temperature(Vector2f pos, float const& size, float const& t) {
 	for(int i((pos.x-size)/scale); i < (pos.x+size)/scale; i++)
 		for(int j((pos.y-size)/scale); j < (pos.y+size)/scale; j++)
 			if(distance(Vector2f(i,j),pos/scale)<size/scale)
-				temperature.setValue(i,j,_T);
+				temperature.setValue(i,j,t);
 }
