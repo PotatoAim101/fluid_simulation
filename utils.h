@@ -4,7 +4,7 @@
 #include <cmath>
 #include <iostream>
 #include <vector>
-#include "Matrix.h"
+#include "matrix.h"
 
 #define E(i,j) ((i)+(N)*(j))
 #define PI 3.14159265359
