@@ -48,7 +48,7 @@ Follow the steps in this link [here](https://www.sfml-dev.org/tutorials/2.5/star
    make
    ```
 
-3.Run the script
+3. Run the script
    ```sh
    ./simulation
    ```
