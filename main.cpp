@@ -34,7 +34,16 @@ int main()
 		mousePos = Vector2f(Mouse::getPosition(window).x, Mouse::getPosition(window).y);
 		mouseSpeed = (mousePos - mousePrevPos)/(float)dt;
 		
-		/* keys */
+		/* keys 
+		 * Press left mouse button to add walls
+		 * Press right mouse button to add fluid density
+		 * Press P + right to add positive pressure
+	 	 * Press N + right to add negative pressure
+		 * Press S + right to add speed
+		 * Press T + right to ass temperature
+		 * Press D to visualize speed
+		 * Press C to visualize pressure and C + right to add bigger pressure
+		 */
 		bool left = Mouse::isButtonPressed(Mouse::Right);
 		bool right = Mouse::isButtonPressed(Mouse::Left);
 
