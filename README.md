@@ -60,5 +60,7 @@ Follow the steps in this link [here](https://www.sfml-dev.org/tutorials/2.5/star
 - Press N + right to add negative pressure
 - Press S + right to add speed
 - Press T + right to ass temperature
+- Press D to visualize speed
+- Press C to visualize pressure and C + right to add bigger pressure
 
 ### Acknowledgements
