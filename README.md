@@ -15,12 +15,12 @@
 
   <h3 align="center">Fluid Simulation</h3>
 
-  <p align="center">
+  <!-- <p align="center">
     <br />
     <a href="https://github.com/Gvanderl/RetweetPrediction/issues">Report Bug</a>
     ·
     <a href="https://github.com/Gvanderl/RetweetPrediction/issues">Request Feature</a>
-  </p>
+  </p> -->
 </p>
 
 <!-- ABOUT THE PROJECT -->
